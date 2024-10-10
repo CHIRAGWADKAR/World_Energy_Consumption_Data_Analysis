@@ -101,7 +101,8 @@ ggplot(df_2020, aes(x = reorder(country, renewable),
 
 df_2020
 
-# Pie chart for energy consumption in 2020 for selected countries with percentage labels
+# Pie chart for energy consumption in 2020 for selected countries 
+# with percentage labels
 df_2020_selected <- df_2020 %>%
   filter(country %in% c("India", 
                         "United States", 
@@ -113,13 +114,38 @@ df_2020_selected <- df_2020 %>%
 df_2020_selected <- df_2020_selected %>%
   mutate(renewable_perc = round(renewable / sum(renewable) * 100, 1))
 
-# Create the pie chart with percentages
+# Pie chart with percentages
 ggplot(df_2020_selected, aes(x = "", y = renewable, fill = country)) +
   geom_col(width = 1, color = "white") +  # Adjust width for better pie shape
   coord_polar(theta = "y") +
   geom_text(aes(label = paste0(renewable_perc, "%")), 
-            position = position_stack(vjust = 0.5), size = 4) +  # Add percentage labels
+            position = position_stack(vjust = 0.5), 
+            size = 4) +  #Add percentage labels
   labs(title = "Renewable Energy Consumption in 2020 for Selected Countries") +
+  theme_void() +  # Remove axis lines and ticks
+  scale_fill_brewer(palette = "Set3") +  # Add color palette
+  theme(legend.position = "right")  # Place legend to the right
+
+# Pie chart for non-renewable energy consumption in 2020 
+# for selected countries with percentage labels
+df_2020_selected_nonrenewable <- df_2020 %>%
+  filter(country %in% c("India", 
+                        "United States", 
+                        "Germany", 
+                        "China", 
+                        "Japan"))
+
+# Calculate percentages for non-renewable energy
+df_2020_selected_nonrenewable <- df_2020_selected_nonrenewable %>%
+  mutate(nonrenewable_perc = round(not_renewable / sum(not_renewable) * 100, 1))
+
+# Create the pie chart for non-renewable energy with percentages
+ggplot(df_2020_selected_nonrenewable, aes(x = "", y = not_renewable, fill = country)) +
+  geom_col(width = 1, color = "white") +  # Adjust width for pie chart
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(nonrenewable_perc, "%")), 
+            position = position_stack(vjust = 0.5), size = 4) +  # Add percentage labels
+  labs(title = "Non-Renewable Energy Consumption in 2020 for Selected Countries") +
   theme_void() +  # Remove axis lines and ticks
   scale_fill_brewer(palette = "Set3") +  # Add color palette
   theme(legend.position = "right")  # Place legend to the right
